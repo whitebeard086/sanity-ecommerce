@@ -1,5 +1,5 @@
 import {
-    Button,
+  Button,
   Card,
   CardActionArea,
   CardActions,
@@ -11,7 +11,7 @@ import {
 import NextLink from "next/link";
 import { urlForThumbnail } from "../utils/image";
 
-const ProductItem = ({ product }) => {
+const ProductItem = ({ product, addToCartHandler }) => {
   return (
     <Card>
       <NextLink href={`/product/${product.slug.current}`} passHref>
@@ -28,7 +28,7 @@ const ProductItem = ({ product }) => {
       </NextLink>
       <CardActions>
         <Typography>${product.price}</Typography>
-        <Button size="small" color="primary">
+        <Button size="small" color="primary" onClick={() => addToCartHandler(product)}>
           Add to cart
         </Button>
       </CardActions>

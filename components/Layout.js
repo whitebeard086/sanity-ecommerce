@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Badge,
   Box,
   Container,
   CssBaseline,
@@ -16,10 +17,11 @@ import jsCookie from "js-cookie";
 import { useContext } from "react";
 import { Store } from "../utils/Store";
 import classes from "../utils/classes";
+import { ShoppingCartOutlined } from "@mui/icons-material";
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
-  const { darkMode } = state;
+  const { darkMode, cart } = state;
 
   const theme = createTheme({
     components: {
@@ -77,6 +79,17 @@ export default function Layout({ title, description, children }) {
             </Box>
             <Box>
               <Switch checked={darkMode} onChange={darkModeChangeHandler}></Switch>
+              <NextLink href="/cart" passHref>
+                <Link>
+                  <Typography component="span">
+                    {cart.cartItems.length > 0 ? (
+                      <Badge color="secondary" badgeContent={cart.cartItems.length}><ShoppingCartOutlined /></Badge>
+                    ) : (
+                      <ShoppingCartOutlined />
+                    )}
+                  </Typography>
+                </Link>
+              </NextLink>
             </Box>
           </Toolbar>
         </AppBar>
