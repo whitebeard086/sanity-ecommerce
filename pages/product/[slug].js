@@ -22,14 +22,18 @@ import classes from "../../utils/classes";
 import { Store } from "../../utils/Store";
 import { urlFor, urlForThumbnail } from "../../utils/image";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const ProductDetails = props => {
+  const router = useRouter();
   const { slug } = props;
   const {
     state: { cart },
     dispatch,
   } = useContext(Store);
+
   const { enqueueSnackbar } = useSnackbar();
+  
   const [state, setState] = useState({
     product: null,
     loading: true,
@@ -73,6 +77,7 @@ const ProductDetails = props => {
       },
     });
     enqueueSnackbar(`${product.name} added to the cart`, { variant: "success" });
+    router.push("/cart");
   };
 
   return (
