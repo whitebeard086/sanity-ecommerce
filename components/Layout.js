@@ -21,7 +21,7 @@ import { ShoppingCartOutlined } from "@mui/icons-material";
 
 export default function Layout({ title, description, children }) {
   const { state, dispatch } = useContext(Store);
-  const { darkMode, cart } = state;
+  const { darkMode, cart, userInfo } = state;
 
   const theme = createTheme({
     components: {
@@ -83,16 +83,24 @@ export default function Layout({ title, description, children }) {
                 <Link>
                   <Typography component="span">
                     {cart.cartItems.length > 0 ? (
-                      <Badge color="secondary" badgeContent={cart.cartItems.length}><ShoppingCartOutlined /></Badge>
+                      <Badge color="secondary" badgeContent={cart.cartItems.length}>
+                        <ShoppingCartOutlined />
+                      </Badge>
                     ) : (
                       <ShoppingCartOutlined />
                     )}
                   </Typography>
                 </Link>
               </NextLink>
-              <NextLink href="/login" passHref>
-                <Link>Login</Link>
-              </NextLink>
+              {userInfo ? (
+                <NextLink href="/profile" passHref>
+                  <Link>{userInfo.name}</Link>
+                </NextLink>
+              ) : (
+                <NextLink href="/login" passHref>
+                  <Link>Login</Link>
+                </NextLink>
+              )}
             </Box>
           </Toolbar>
         </AppBar>
