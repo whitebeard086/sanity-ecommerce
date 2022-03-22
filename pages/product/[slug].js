@@ -1,21 +1,41 @@
-import { Alert, Box, Button, Card, CircularProgress, Grid, Link, List, ListItem, Rating, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CircularProgress,
+  Grid,
+  Link,
+  List,
+  ListItem,
+  Rating,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState, useContext } from "react";
+import Image from "next/image";
 import NextLink from "next/link";
+import { useSnackbar } from "notistack";
 
 import Layout from "../../components/Layout";
 import client from "../../utils/client";
 import classes from "../../utils/classes";
-import Image from "next/image";
-import { urlFor } from "../../utils/image";
+import { Store } from "../../utils/Store";
+import { urlFor, urlForThumbnail } from "../../utils/image";
+import axios from "axios";
 
-const ProductDetails = (props) => {
-    const { slug } = props;
+const ProductDetails = props => {
+  const { slug } = props;
+  const {
+    state: { cart },
+    dispatch,
+  } = useContext(Store);
+  const { enqueueSnackbar } = useSnackbar();
   const [state, setState] = useState({
     product: null,
     loading: true,
     error: "",
   });
-  
+
   const { product, loading, error } = state;
 
   useEffect(() => {
@@ -31,6 +51,29 @@ const ProductDetails = (props) => {
     };
     fetchData();
   }, []);
+
+  const addToCartHandler = async () => {
+    const existItem = cart.cartItems.find(x => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      enqueueSnackbar("Sorry, Product is out of stock.", { variant: "error" });
+      return;
+    }
+    dispatch({
+      type: "CART_ADD_ITEM",
+      payload: {
+        _key: product._id,
+        name: product.name,
+        countInStock: product.countInStock,
+        slug: product.slug.current,
+        price: product.price,
+        image: urlForThumbnail(product.image),
+        quantity,
+      },
+    });
+    enqueueSnackbar(`${product.name} added to the cart`, { variant: "success" });
+  };
 
   return (
     <Layout title={product?.title}>
@@ -58,59 +101,59 @@ const ProductDetails = (props) => {
               />
             </Grid>
             <Grid item md={3} xs={12}>
-                <List>
-                    <ListItem>
-                        <Typography component="h1" variant="h1">
-                            {product.name}
-                        </Typography>
-                    </ListItem>
-                    <ListItem>
-                        Category: {product.category}
-                    </ListItem>
-                    <ListItem>
-                        brand: {product.brand}
-                    </ListItem>
-                    <ListItem>
-                        <Rating value={product.rating} readOnly></Rating>
-                        <Typography sx={classes.smallText}>({product.numReviews} reviews)</Typography>
-                    </ListItem>
-                    <ListItem>
-                        <Typography>
-                            Description: { product.description}
-                        </Typography>
-                    </ListItem>
-                </List>
+              <List>
+                <ListItem>
+                  <Typography component="h1" variant="h1">
+                    {product.name}
+                  </Typography>
+                </ListItem>
+                <ListItem>Category: {product.category}</ListItem>
+                <ListItem>brand: {product.brand}</ListItem>
+                <ListItem>
+                  <Rating value={product.rating} readOnly></Rating>
+                  <Typography sx={classes.smallText}>({product.numReviews} reviews)</Typography>
+                </ListItem>
+                <ListItem>
+                  <Typography>Description: {product.description}</Typography>
+                </ListItem>
+              </List>
             </Grid>
             <Grid item md={3} xs={12}>
-                <Card>
-                    <List>
-                        <ListItem>
-                            <Grid container>
-                                <Grid item xs={6}>
-                                    <Typography>Price</Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography>${product.price}</Typography>
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                        <ListItem>
-                            <Grid container>
-                                <Grid item xs={6}>
-                                    <Typography>Status</Typography>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <Typography>{product.countInStock > 0 ? "In Stock" : "Unavailable"}</Typography>
-                                </Grid>
-                            </Grid>
-                        </ListItem>
-                        <ListItem>
-                            <Button sx={classes.button} fullWidth variant="contained">
-                                Add to cart
-                            </Button>
-                        </ListItem>
-                    </List>
-                </Card>
+              <Card>
+                <List>
+                  <ListItem>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Typography>Price</Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography>${product.price}</Typography>
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                  <ListItem>
+                    <Grid container>
+                      <Grid item xs={6}>
+                        <Typography>Status</Typography>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Typography>
+                          {product.countInStock > 0 ? "In Stock" : "Unavailable"}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      onClick={addToCartHandler}
+                      sx={classes.button}
+                      fullWidth
+                      variant="contained">
+                      Add to cart
+                    </Button>
+                  </ListItem>
+                </List>
+              </Card>
             </Grid>
           </Grid>
         </Box>
@@ -120,10 +163,8 @@ const ProductDetails = (props) => {
 };
 
 export const getServerSideProps = context => {
-    return {
-      props: { slug: context.params.slug },
-    };
+  return {
+    props: { slug: context.params.slug },
   };
+};
 export default ProductDetails;
-
-
