@@ -10,6 +10,7 @@ import Form from "../components/Form";
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
 import axios from "axios";
+import { getError } from "../utils/error";
 
 const Register = () => {
   const { state, dispatch } = useContext(Store);
@@ -45,7 +46,7 @@ const Register = () => {
       jsCookie.set("userInfo", JSON.stringify(data));
       router.push("/");
     } catch (err) {
-      enqueueSnackbar(err.message, { variant: "error" });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
 

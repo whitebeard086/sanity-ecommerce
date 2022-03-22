@@ -4,7 +4,7 @@ const classes = {
     marginBottom: 1,
   },
   smallText: {
-    fontSize: "15px"
+    fontSize: "15px",
   },
   button: {
     background: "rgb(230, 57, 70)",
@@ -34,6 +34,10 @@ const classes = {
   brand: {
     fontWeight: "bold",
     fontSize: "1.5rem",
+  },
+  navbarButton: {
+    color: "#fff",
+    textTransform: "initial",
   },
 };
 
