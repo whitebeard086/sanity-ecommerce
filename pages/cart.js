@@ -20,6 +20,7 @@ import { useContext } from "react";
 import NextLink from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 
 import Layout from "../components/Layout";
 import { Store } from "../utils/Store";
@@ -27,6 +28,8 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 
 const Cart = () => {
+  const router = useRouter();
+
   const {
     state: {
       cart: { cartItems },
@@ -144,7 +147,13 @@ const Cart = () => {
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button fullWidth color="primary" variant="contained">
+                  <Button
+                    onClick={() => {
+                      router.push("/shipping");
+                    }}
+                    fullWidth
+                    color="primary"
+                    variant="contained">
                     Checkout
                   </Button>
                 </ListItem>

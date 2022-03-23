@@ -80,10 +80,11 @@ export default function Layout({ title, description, children }) {
 
   const logoutClickHandler = () => {
     setAnchorEl(null);
-    dispatch({ type: "USER_LOGOUT" });
-    jsCookie.remove("userInfo");
-    jsCookie.remove("cartItems");
-    router.push("/");
+    dispatch({ type: 'USER_LOGOUT' });
+    jsCookie.remove('userInfo');
+    jsCookie.remove('cartItems');
+    jsCookie.remove('shippingAddress');
+    router.push('/');
   };
 
   return (
