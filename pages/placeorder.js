@@ -244,13 +244,7 @@ const PlaceOrder = () => {
                   Place Order
                 </Button>
               </ListItem>
-              <ListItem>
-                {loading && (
-                  <ListItem>
-                    <CircularProgress />
-                  </ListItem>
-                )}
-              </ListItem>
+              <ListItem>{loading && <CircularProgress />}</ListItem>
             </List>
           </Card>
         </Grid>
