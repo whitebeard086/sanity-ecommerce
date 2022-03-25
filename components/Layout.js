@@ -80,12 +80,12 @@ export default function Layout({ title, description, children }) {
 
   const logoutClickHandler = () => {
     setAnchorEl(null);
-    dispatch({ type: 'USER_LOGOUT' });
-    jsCookie.remove('userInfo');
-    jsCookie.remove('cartItems');
-    jsCookie.remove('shippingAddress');
-    jsCookie.remove('paymentMethod');
-    router.push('/');
+    dispatch({ type: "USER_LOGOUT" });
+    jsCookie.remove("userInfo");
+    jsCookie.remove("cartItems");
+    jsCookie.remove("shippingAddress");
+    jsCookie.remove("paymentMethod");
+    router.push("/");
   };
 
   return (
@@ -136,6 +136,9 @@ export default function Layout({ title, description, children }) {
                     open={Boolean(anchorEl)}
                     onClose={loginMenuCloseHandler}>
                     <MenuItem onClick={e => loginMenuCloseHandler(e, "/profile")}>Profile</MenuItem>
+                    <MenuItem onClick={e => loginMenuCloseHandler(e, "/order-history")}>
+                      Order History
+                    </MenuItem>
                     <MenuItem onClick={logoutClickHandler}>Logout</MenuItem>
                   </Menu>
                 </>

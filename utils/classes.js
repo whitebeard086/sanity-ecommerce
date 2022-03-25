@@ -39,6 +39,9 @@ const classes = {
     color: "#fff",
     textTransform: "initial",
   },
+  fullWidth: {
+    width: "100%",
+  },
 };
 
 export default classes;
